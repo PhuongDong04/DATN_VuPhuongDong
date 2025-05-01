@@ -1,0 +1,102 @@
+import React, { useState } from "react";
+import './booking.css'
+import { Form, FormGroup, ListGroup, Button, ListGroupItem } from "reactstrap";
+import { useNavigate } from "react-router-dom";
+
+
+const Booking = ({ tour, avgRating }) => {
+
+    const { price, reviews } = tour;
+    const navigate = useNavigate();
+
+    const [credentials, setCredentials] = useState({
+        userId: '01',  //later it will be dynamic
+        userEmail: 'example@gmail.com',
+        fullname: '',
+        phone: '1234',
+        guestSize: '',
+        BookingAt: ''
+    })
+
+    const handleChange = e => {
+        setCredentials(prev => ({ ...prev, [e.target.id]: e.target.value }))
+    };
+
+
+    const ServiceFee = 10;
+    const totalAmount = Number(price) * Number(credentials.guestSize) + Number(ServiceFee);
+
+    //send data to the server
+    const handleClick = e => {
+        e.preventDefault()
+
+        // console.log(credentials);
+        navigate('/thank-you');
+    }
+
+    return <div className="booking">
+        <div className="booking__top d-flex align-items-center justify-content-between">
+            <h3>${price} <span> /per person</span></h3>
+
+            <span className="tour__rating d-flex align-items-center">
+                {/* Hiện sao đánh giá LEARN */}
+                <i class="ri-star-fill"></i>
+                {avgRating === 0 ? null : avgRating} ({reviews?.length})
+            </span>
+        </div>
+
+        {/* ===booking top=== */}
+        <div className="booking__form">
+            <h5>Information</h5>
+            <Form className="booking__info-form" onSubmit={handleClick}>
+                <FormGroup>
+                    <input type="text" placeholder="Full name" id="fullname"
+                        required onChange={handleChange} />
+                </FormGroup>
+
+                <FormGroup>
+                    <input type="number" placeholder="Phone" id="phone"
+                        required onChange={handleChange} />
+                </FormGroup>
+
+                <FormGroup className="d-flex align-item-center gap-3">
+                    <input type="date" placeholder="" id="bookingAt"
+                        required onChange={handleChange} />
+
+                    <input type="number" placeholder="guestSize" id="bookingAt"
+                        required onChange={handleChange} />
+                </FormGroup>
+            </Form>
+        </div>
+        {/* ===booking top end=== */}
+
+        {/* ===booking bottom start=== */}
+        <div className="booking__bottom">
+            <ListGroup>
+                <ListGroupItem className="border-0 px-0">
+                    <h5 className="d-flex align-items-center gap-1">${price} <i class="ri-close-line"></i> 1 person</h5>
+                    <span>${price}</span>
+                </ListGroupItem>
+
+                <ListGroupItem className="border-0 px-0">
+                    <h5>Service charge</h5>
+                    <span>${ServiceFee}</span>
+                </ListGroupItem>
+
+                <ListGroupItem className="border-0 px-0 total">
+                    <h5>Total</h5>
+                    {/* <span>${totalAmount}</span> */}
+                    <span>$109</span>
+                </ListGroupItem>
+            </ListGroup>
+
+            <Button className="btn primary__btn w-100 mt-4" onClick={handleClick}>Book Now</Button>
+        </div>
+        {/* ===booking bottom end=== */}
+
+    </div >
+}
+
+export default Booking
+
+//<> </>Bọc các thẻ lại mà không sinh thẻ HTML thừa
